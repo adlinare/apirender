@@ -75,15 +75,15 @@ app.get('/data/:id', async (req, res) => {
     }
 
     try {
-        // Buscar los datos de esa compostera en PostgreSQL
-        const query = 'SELECT humidity, temperature, updated_at FROM compostera_state WHERE id = $1';
+        // Agregamos "id" al SELECT para que te devuelva el número de la compostera
+        const query = 'SELECT id, humidity, temperature, updated_at FROM compostera_state WHERE id = $1';
         const result = await pool.query(query, [compostId]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Todavía no hay datos registrados para esta compostera.' });
         }
 
-        // Devolvemos los datos encontrados
+        // Devolvemos los datos encontrados, ¡ahora incluirá el ID!
         res.status(200).json(result.rows[0]);
 
     } catch (error) {
